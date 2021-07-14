@@ -4,7 +4,7 @@
 
 ## ▶️ Demonstração
 
-Deploy:
+Deploy: https://meeting-votes.vercel.app/
 
 ------------
 
