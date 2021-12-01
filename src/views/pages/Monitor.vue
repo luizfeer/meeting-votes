@@ -1,21 +1,26 @@
 <template>
-  <div class="container flex flex-col items-center">
-    <div class="flex text-xl text-gray-600 mb-4">
-      <button class="pr-4">
-        <span v-if="reverse === -1">△</span>
-        <span v-if="reverse === 1">▽</span>
-      </button>
-      Quórum presente: {{ quorum * 2 }}
+  <div :style="{ backgroundColor: (streaming ? bgColor.hexa : '#fff')}" class="relative h-screen">
+    <div class="container flex flex-col items-center">
+      <div
+        class="flex text-xl mb-4"
+        :style="{color: (streaming ? invertHex(bgColor.hex) : '#1A1A1AFF')}"
+      >
+        <button class="pr-4">
+          <span v-if="reverse === -1">△</span>
+          <span v-if="reverse === 1">▽</span>
+        </button>
+        Quórum presente: {{ quorum * 2 }}
+      </div>
+      <ul class="relative" :style="{ width: (widthMonitor) + '%'}">
+        <li
+          class="moving-item text-2xl h-16 w-full rounded-lg shadow-lg bg-gray-200 mb-10 p-4 absolute"
+          :class="item.votes > quorum ? 'bg-green-500 text-white border-green-900 ':''"
+          v-for="(item,index) in items"
+          :key="index"
+          :style="{ top: (item.position * 5) + 'rem'}"
+        >{{ item.name }} - {{ item.votes }}</li>
+      </ul>
     </div>
-    <ul class="relative" :style="{ width: (widthMonitor) + '%'}">
-      <li
-        class="moving-item text-2xl h-16 w-full rounded-lg shadow-lg bg-gray-200 mb-10 p-4 absolute"
-        :class="item.votes > quorum ? 'bg-green-500 text-white border-green-900 ':''"
-        v-for="(item,index) in items"
-        :key="index"
-        :style="{ top: (item.position * 5) + 'rem'}"
-      >{{ item.name }} - {{ item.votes }}</li>
-    </ul>
   </div>
 </template>
 
@@ -29,6 +34,15 @@ export default {
   methods: {
     changeOrder() {
       this.sort();
+    },
+    invertHex(color) {
+      /* eslint-disable */
+      return (
+        '#' +
+        (
+          '000000' + (0xffffff ^ parseInt(color.substring(1), 16)).toString(16)
+        ).slice(-6)
+      );
     },
     sort() {
       const newItems = this.items.slice().sort((a, b) => {
@@ -60,6 +74,12 @@ export default {
     },
     reverse() {
       return this.$store.state.reverse;
+    },
+    streaming() {
+      return this.$store.state.streaming;
+    },
+    bgColor() {
+      return this.$store.state.bgColor;
     },
   },
   watch: {

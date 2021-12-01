@@ -25,6 +25,13 @@
           </v-list-item-icon>
           <v-list-item-title>Monitor</v-list-item-title>
         </v-list-item>
+
+        <v-list-item href="https://github.com/luizfeer/meeting-votes" target="_blank">
+          <v-list-item-icon>
+            <v-icon>mdi-information-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Sobre</v-list-item-title>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>

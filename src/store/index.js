@@ -11,6 +11,8 @@ export default new Vuex.Store({
     quorum: 0,
     widthMonitor: 100,
     reverse: 1,
+    streaming: false,
+    bgColor: null,
   },
   mutations: {
     removeAlert(state) {
@@ -34,9 +36,16 @@ export default new Vuex.Store({
     setWidthMonitor(state, payload) {
       state.widthMonitor = payload;
     },
+    setStreaming(state, payload) {
+      state.streaming = payload;
+    },
     changeOrder(state, val) {
       state.reverse = val ? 1 : -1;
     },
+    setBgColor(state, val) {
+      state.bgColor = val;
+    },
+
   },
   actions: {
     alert({ commit }, msg) {
@@ -48,7 +57,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createMultiTabState({
-      statesPaths: ['candidatesStore', 'quorum', 'widthMonitor', 'reverse'],
+      statesPaths: ['candidatesStore', 'quorum', 'widthMonitor', 'reverse', 'streaming', 'bgColor'],
     }),
   ],
 });

@@ -43,56 +43,99 @@
           </tr>
         </template>
       </v-data-table>
-      {{ idIcremente }}
       <v-row align="center" justify="center">
         <v-col class="shrink" cols="12">
-          <v-form v-model="valid" class="mt-4" ref="form">
-            <v-card elevation="2" class="pa-4">
-              <v-card-title>Cadastro de novos canditados</v-card-title>
-              <v-row justify="center" class="ma-6">
-                <v-col cols="10" sm="12">
-                  <v-text-field
-                    v-model="form.name"
-                    :rules="nameRules"
-                    :counter="24"
-                    label="Nome do candidato"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col class="pl-10 flex items-center justify-between" cols="10" sm="12">
-                  <v-checkbox v-model="one" label="Cadastrar com 1 voto"></v-checkbox>
-                  <v-btn
-                    :disabled="!valid"
-                    color="success"
-                    class="mb-4"
-                    @click="saveCandidate"
-                  >Cadastrar</v-btn>
-                </v-col>
-              </v-row>
-              <v-row align="center" justify="center">
-                <v-col class="pl-10 flex items-center justify-between" cols="2" sm="6">
-                  <v-text-field
-                    v-model="quorum"
-                    label="Quórum presente"
-                    type="number"
-                    class="w-10"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col class="pl-10 flex items-center justify-between" cols="2" sm="6">
-                  <v-switch v-model="reverse" :label="`Ordenação: ${reverse ? 'maior': 'menor'}`"></v-switch>
-                </v-col>
-                <v-col class="pl-10" cols="6" sm="12">
-                  <v-card>
-                    <v-card-title>Largura dos balões</v-card-title>
-                    <v-card-text>
-                      <v-slider v-model="width" step="10" thumb-label ticks></v-slider>
-                    </v-card-text>
+          <v-card>
+            <v-tabs v-model="tab" background-color="accent-4" centered dark icons-and-text>
+              <v-tabs-slider></v-tabs-slider>
+
+              <v-tab>
+                Cadastrar pessoas
+                <v-icon>mdi-account-multiple-plus</v-icon>
+              </v-tab>
+
+              <v-tab>
+                Configurações
+                <v-icon>mdi-cog-outline</v-icon>
+              </v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="tab">
+              <v-tab-item>
+                <v-form v-model="valid" class="mt-4" ref="form">
+                  <v-card elevation="2" class="pa-4">
+                    <v-card-title>Cadastro de novos canditados</v-card-title>
+                    <v-row justify="center" class="ma-6">
+                      <v-col cols="10" sm="12">
+                        <v-text-field
+                          v-model="form.name"
+                          :rules="nameRules"
+                          :counter="24"
+                          label="Nome do candidato"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col class="pl-10 flex items-center justify-between" cols="10" sm="12">
+                        <v-checkbox v-model="one" label="Cadastrar com 1 voto"></v-checkbox>
+                        <v-btn
+                          :disabled="!valid"
+                          color="success"
+                          class="mb-4"
+                          @click="saveCandidate"
+                        >Cadastrar</v-btn>
+                      </v-col>
+                    </v-row>
                   </v-card>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-form>
+                </v-form>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat class="p-4 pt-10">
+                  <v-row align="center" justify="center">
+                    <v-col class="pl-10 flex items-center justify-between" cols="2" sm="6">
+                      <v-text-field
+                        v-model="quorum"
+                        label="Quórum presente"
+                        type="number"
+                        class="w-10"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="pl-10 flex items-center justify-between" cols="2" sm="6">
+                      <v-switch
+                        v-model="reverse"
+                        :label="`Ordenação: ${reverse ? 'maior': 'menor'}`"
+                      ></v-switch>
+                    </v-col>
+                    <v-row>
+                      <v-col class="pl-10 flex items-center justify-between" cols="12">
+                        <v-switch
+                          v-model="streaming"
+                          :label="`Modo streaming: ${streaming ? 'ativado': 'desativado'}`"
+                        ></v-switch>
+                      </v-col>
+                      <div v-if="streaming">
+                        <v-card-title>Cor do chromaKey</v-card-title>
+                        <v-col class="pl-10 flex items-center justify-between" cols="12">
+                          <v-color-picker
+                            v-model="bgColor"
+                            dot-size="25"
+                            mode="hexa"
+                            swatches-max-height="200"
+                          ></v-color-picker>
+                        </v-col>
+                      </div>
+                    </v-row>
+                    <v-col class="pl-6" cols="6" sm="12">
+                      <v-card-title>Largura dos balões</v-card-title>
+                      <v-card-text>
+                        <v-slider v-model="width" step="10" thumb-label ticks></v-slider>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card>
         </v-col>
       </v-row>
     </v-col>
@@ -104,6 +147,8 @@
 export default {
   data() {
     return {
+      bgColor: null,
+      tab: null,
       search: '',
       quorum: 0,
       width: 100,
@@ -111,6 +156,7 @@ export default {
       valid: true,
       expand: false,
       reverse: true,
+      streaming: false,
       form: {
         id: 0,
         name: '',
@@ -163,6 +209,7 @@ export default {
   methods: {
     saveCandidate() {
       this.$store.commit('addCandite', { ...this.form });
+      this.form.name = null;
     },
     plus(id) {
       const candidateKey = this.candidates.findIndex((x) => x.id === id);
@@ -219,12 +266,20 @@ export default {
     reverse(val) {
       this.$store.commit('changeOrder', val);
     },
+    streaming(val) {
+      this.$store.commit('setStreaming', val);
+    },
+    bgColor(val) {
+      this.$store.commit('setBgColor', val);
+    },
   },
   mounted() {
+    this.$vuetify.theme.dark = true;
     this.form.id = this.idIcremente;
     this.form.position = this.idIcremente;
     this.quorum = this.$store.state.quorum;
     this.width = this.$store.state.widthMonitor;
+    this.streaming = this.$store.state.streaming;
   },
 };
 </script>

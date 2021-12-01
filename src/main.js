@@ -17,6 +17,7 @@ new Vue({
   vuetify,
   render: (h) => h(App),
   mounted() {
+    // this.$vuetify.theme.dark = true;
     this.$vuetify.lang.defaultLocale = 'pt';
     this.$vuetify.lang.current = 'pt';
   },
