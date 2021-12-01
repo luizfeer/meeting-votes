@@ -15,7 +15,7 @@
       />
       <div class="navbar d-flex align-center justify-space-between">
 
-      <v-toolbar-title>CRUD de Provas</v-toolbar-title>
+      <v-toolbar-title>Monitor de votos</v-toolbar-title>
       <v-switch
         v-model="$vuetify.theme.dark"
         inset
